@@ -1,5 +1,6 @@
 package net.reisshie.vkgroupreader;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,24 +30,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.context = getApplicationContext();
-        this.initTools();
-        this.initWidgets();
         this.apiWorker = new ApiWorker(this);
+        this.initTools();
+        this.saveWidgets();
         this.apiWorker.setErrorContainer(this.twGroupInfo).setSuccessContainer(this.twGroupInfo);
+        this.initWidgets();
     }
 
-    protected void initWidgets() {
+    protected void saveWidgets() {
         this.btnLoadGroup = (Button) this.findViewById(R.id.btn_load_group);
         this.btnSaveGroup = (Button) this.findViewById(R.id.btn_save_group);
         this.etGroupId = (EditText) this.findViewById(R.id.et_enter_group);
         this.twGroupInfo = (TextView) this.findViewById(R.id.tw_group_info);
+    }
+
+    protected void initWidgets() {
+        final MainActivity self = this;
 
         btnLoadGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String enteredId = etGroupId.getText().toString();
                 Toast.makeText(getApplicationContext(), "Load Group by id: " + enteredId, Toast.LENGTH_LONG).show();
-                apiWorker.getGroup(enteredId);
+                self.apiWorker.getGroup(enteredId);
+                self.apiWorker.getGroupPosts(enteredId, self.pager);
             }
         });
     }
