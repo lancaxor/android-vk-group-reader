@@ -1,10 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="net.reisshie.vkgroupreader.PostListActivity">
+    tools:context="net.reisshie.vkgroupreader.PostListActivity"
+    >
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:id="@+id/mpl_menu_refresh_list"
+        android:orderInCategory="1"
+        android:title="Refresh list"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/mpl_menu_download_posts"
+        android:orderInCategory="4"
+        android:title="Get posts"
+        app:showAsAction="never"
+    />
+
+    <item
+        android:id="@+id/mpl_menu_action_settings"
+        android:orderInCategory="7"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+    />
 </menu>

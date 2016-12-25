@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">VkGroupReader</string>
-    <integer name="com_vk_sdk_AppId">5782946</integer>
     <string name="title_activity_post_list">Vk Group Reader</string>
+    <integer name="com_vk_sdk_AppId">5782946</integer>
     <string name="large_text">Add groups in settings for getting data</string>
     <string name="action_settings">Settings</string>
 </resources>

@@ -29,6 +29,12 @@ public class ApiWorker {
     private TextView errorContainer;
     private boolean isError = false;
 
+    public void setCallback(ApiCallbackInterface callback) {
+        this.callback = callback;
+    }
+
+    private ApiCallbackInterface callback;
+
     public boolean isError() {
         return isError;
     }
@@ -74,72 +80,30 @@ public class ApiWorker {
 
     public void getGroup(String groupId) {
         VKRequest request = VKApi.groups().getById(VKParameters.from(VKApiConst.GROUP_ID, groupId));
+        final ApiWorker self = this;
         this.sendRequest(request, new ApiCallbackInterface() {
             @Override
             public void onSuccess(VKResponse result) {
-                Toast.makeText(context, "Group info loaded!", Toast.LENGTH_SHORT).show();
-                VKApiCommunityArray communityArray = new VKApiCommunityArray();
-                try {
-                    communityArray.parse(result.json);
-                } catch (JSONException e) {
-                    return;
-                }
-                if(communityArray.size() == 0) {
-                    Toast.makeText(context, "Group Not Found", Toast.LENGTH_LONG).show();
-                    if(errorContainer != null) {
-                        errorContainer.setText("Group Not Found!");
-                    }
-                    return;
-                }
-                VKApiCommunity community = communityArray.get(0);
-                if(successContainer != null) {
-                    successContainer.setText("Group '" + community.name + "' was loaded successfully!");
-                }
+                self.callback.onSuccess(result);
             }
 
             @Override
             public void onFail(VKError result) {
-                Toast.makeText(context, "Load group info failed!", Toast.LENGTH_SHORT).show();
-                if(errorContainer != null) {
-                    errorContainer.setText("Error (" + result.errorCode + "), message: " + result.errorMessage + "; reason: " + result.errorReason);
-                }
+                self.callback.onFail(result);
             }
         });
     }
 
     public void getGroupPosts(String groupId, Pager pager) {
-        String wallGroupId = "-" + groupId;
+//        String wallGroupId = "-" + groupId;
         String fields = "text,id,date";
         VKRequest request = VKApi.wall().get(VKParameters.from(
-                VKApiConst.OWNER_ID, wallGroupId,
-                VKApiConst.FIELDS, fields
+                VKApiConst.OWNER_ID, groupId,
+                VKApiConst.FIELDS, fields,
+                VKApiConst.COUNT, pager.getLimit()
         ));
+        final ApiWorker self = this;
 
-        this.sendRequest(request, new ApiCallbackInterface() {
-            @Override
-            public void onSuccess(VKResponse response) {
-                isError = false;
-                String result = "";
-                String separator = "\n-----------------\n";
-                VKPostArray postArray = new VKPostArray();
-                try {
-                    postArray.parse(response.json);
-                } catch (JSONException exception) {
-                    isError = true;
-                    successContainer.append("Error while parsing text!");
-                    return;
-                }
-
-                for(VKApiPost post: postArray) {
-                    result += (separator + post.text);
-                }
-                successContainer.append(result);
-            }
-
-            @Override
-            public void onFail(VKError result) {
-                isError = true;
-            }
-        });
+        this.sendRequest(request, this.callback);
     }
 }
