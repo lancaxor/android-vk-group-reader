@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.reisshie.vkgroupreader.GroupListActivity">
+
+    <item
+        android:id="@+id/mgl_add_group"
+        android:orderInCategory="100"
+        android:title="Add Group"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mgl_remove_group"
+        android:orderInCategory="110"
+        android:title="Remove Group"
+        app:showAsAction="never" />
+</menu>

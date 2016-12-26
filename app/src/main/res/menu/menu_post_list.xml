@@ -24,4 +24,11 @@
         android:title="@string/action_settings"
         app:showAsAction="never"
     />
+
+    <item
+        android:id="@+id/mpl_menu_manage_groups"
+        android:orderInCategory="10"
+        android:title="Manage Groups"
+        app:showAsAction="never"
+        />
 </menu>

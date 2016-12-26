@@ -95,12 +95,13 @@ public class ApiWorker {
     }
 
     public void getGroupPosts(String groupId, Pager pager) {
-//        String wallGroupId = "-" + groupId;
         String fields = "text,id,date";
+        String wallId = "-" + groupId;
         VKRequest request = VKApi.wall().get(VKParameters.from(
-                VKApiConst.OWNER_ID, groupId,
+                VKApiConst.OWNER_ID, wallId,
                 VKApiConst.FIELDS, fields,
-                VKApiConst.COUNT, pager.getLimit()
+                VKApiConst.COUNT, pager.getLimit(),
+                VKApiConst.OFFSET, pager.getOffset()
         ));
         final ApiWorker self = this;
 

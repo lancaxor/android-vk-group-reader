@@ -84,7 +84,7 @@ public class DbManager extends SQLiteOpenHelper{
     public Cursor getData(String tableName, String[] columns, String columnFilter, String[] columnFilterData,
                              String groupBy, String having, String orderBy, Pager pager) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(tableName, columns, columnFilter, columnFilterData, groupBy, having, orderBy, String.valueOf(pager.getLimit()));
+        Cursor cursor = db.query(tableName, columns, columnFilter, columnFilterData, groupBy, having, orderBy, (pager == null ? null : String.valueOf(pager.getLimit())));
         if(cursor != null && cursor.moveToFirst()) {
             cursor.moveToFirst();
         }
@@ -128,6 +128,13 @@ public class DbManager extends SQLiteOpenHelper{
     public DbManager executeSql(String sql, boolean readonly) {
         SQLiteDatabase db = (readonly ? this.getReadableDatabase() : this.getWritableDatabase());
         db.execSQL(sql);
+        db.close();
+        return this;
+    }
+
+    public DbManager removeRow(String tableName, String where, String[] whereArgs) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tableName, where, whereArgs);
         db.close();
         return this;
     }

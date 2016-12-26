@@ -1,6 +1,7 @@
 package net.reisshie.vkgroupreader;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,8 +34,10 @@ public class PostListActivity extends ListActivity {
     ApiWorker api;
     Pager pager;
     DbManager db;
-    List<String> groupIds;
+    List<String> groupIdsToLoad;
     String currentGroupId;
+    int maxPages = 3;
+    int currentPage = 0;
 
     protected void initVariables() {
         this.api = new ApiWorker(this);
@@ -97,7 +100,7 @@ public class PostListActivity extends ListActivity {
                 try {
                     postArray.parse(result.json);
                 } catch (JSONException exception) {
-                    Toast.makeText(self, exception.getMessage(), Toast.LENGTH_LONG);
+                    Toast.makeText(self, "Exception: " + exception.getMessage(), Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -126,14 +129,25 @@ public class PostListActivity extends ListActivity {
                         }
                     }
                 }
-                Toast.makeText(self, "Posts was downloaded successfully!", Toast.LENGTH_SHORT);
+
+                if(pager.getCurrentPage() < maxPages) {
+                    Toast.makeText(self, "Loading page " + self.currentPage + "for group '" + self.currentGroupId + "'...", Toast.LENGTH_SHORT).show();
+                    loadSavePosts(false);
+                } else {
+                    if (groupIdsToLoad.size() > 0) {
+                        Toast.makeText(self, "Loading next group with ID = '" + self.currentGroupId + "'...", Toast.LENGTH_SHORT).show();
+                        loadSavePosts(false);
+                    } else {
+                        Toast.makeText(self, "Posts was downloaded successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                }
 //                self.appendList(data);
                 self.refreshList();
             }
 
             @Override
             public void onFail(VKError result) {
-                Toast.makeText(self, result.errorMessage, Toast.LENGTH_LONG);
+                Toast.makeText(self, result.errorMessage, Toast.LENGTH_LONG).show();
             }
 
         };
@@ -202,15 +216,18 @@ public class PostListActivity extends ListActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case R.id.mpl_menu_action_settings:
+            case R.id.mpl_menu_action_settings: // Settings
                 Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show();
                 break;
-            case R.id.mpl_menu_download_posts:
+            case R.id.mpl_menu_download_posts:  // Download posts
                 Toast.makeText(this, "Downloading posts...", Toast.LENGTH_SHORT).show();
                 this.loadSavePosts();
                 break;
-            case R.id.mpl_menu_refresh_list:
+            case R.id.mpl_menu_refresh_list:    // Refresh list
                 this.refreshList();
+                break;
+            case R.id. mpl_menu_manage_groups:  // Manage Groups
+                this.openManageGroupsActivity();
                 break;
             default:
                 Toast.makeText(this, "Unknown Action", Toast.LENGTH_LONG).show();
@@ -219,40 +236,45 @@ public class PostListActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    public List<Group> loadGroups() {
-//
-//        this.api.setCallback(this.getLoadGroupCallback());
-//        this.currentGroupId = "106084026";
-//        Group group = new Group(this);
-//        group.setVkId(Long.parseLong(this.currentGroupId));
-//        group.load(group.COLUMN_VK_ID);
-//        if(group.getEntityId() == null) {
-//
-//            this.api.getGroup(this.currentGroupId);
-//            group.setVkId(Long.valueOf(106084026));
-//            group.load(group.COLUMN_VK_ID);
-//        }
-//        List<Group> groups = new ArrayList<Group>();
-//        return groups;
-//    }
+    public void openManageGroupsActivity() {
+        Intent intent = new Intent(this, GroupListActivity.class);
+        this.startActivity(intent);
+    }
 
     public void loadSavePosts() {
-        List<Group> groups = new ArrayList<Group>();
-        this.pager.setPageSize(500);
-        this.pager.setCurrentPage(0);
-        Pager groupsPager = new Pager();    // separate pager for groups
-        groupsPager.setStrict(true)
-                .setCurrentPage(0)
-                .setPageSize(100);
-        groups = (new Group(this)).getEnabledGroups(this.pager);
-        String groupIds = "";
-        int index = 0;
-        for(Group group: groups) {
-            groupIds += "-" + group.getVkId().toString() + (index == (groups.size() - 1) ? "" : ",");
-            index++;
-        }
+        this.loadSavePosts(true);
+    }
 
-        this.api.setCallback(this.getLoadPostsCallback());
-        this.api.getGroupPosts(groupIds, this.pager);
+    public void loadSavePosts(boolean first) {
+
+        if(first) {
+            List<Group> groups = new ArrayList<Group>();
+            this.groupIdsToLoad = new ArrayList<String>();
+            Pager groupsPager = new Pager();    // separate pager for groups
+            groupsPager.setStrict(true)
+                    .setCurrentPage(0)
+                    .setPageSize(100);
+            groups = (new Group(this)).getEnabledGroups(this.pager);
+
+            this.api.setCallback(this.getLoadPostsCallback());
+            for (Group group : groups) {
+//            this.api.getGroupPosts(group.getVkId().toString(), this.pager);
+                this.groupIdsToLoad.add(group.getVkId());
+            }
+        }
+        if(this.currentPage < this.maxPages) {
+            this.pager.setCurrentPage(this.currentPage);
+            this.currentPage++;
+            this.api.getGroupPosts(this.groupIdsToLoad.get(0), this.pager); // load next page
+        } else {
+            if(this.groupIdsToLoad.size() > 0) {
+                this.currentGroupId = this.groupIdsToLoad.get(0);
+                this.groupIdsToLoad.remove(0);
+                this.currentPage = 0;
+                this.pager.setCurrentPage(0);
+                this.api.getGroupPosts(this.currentGroupId, this.pager);
+
+            }
+        }
     }
 }

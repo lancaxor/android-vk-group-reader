@@ -2,6 +2,7 @@
     <string name="app_name">VkGroupReader</string>
     <string name="title_activity_post_list">Vk Group Reader</string>
     <integer name="com_vk_sdk_AppId">5782946</integer>
-    <string name="large_text">Add groups in settings for getting data</string>
+    <string name="large_text">There no groups added to database.\nPress "Settings" -> "Add Group" to fix it.</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_group_list">Groups List</string>
 </resources>

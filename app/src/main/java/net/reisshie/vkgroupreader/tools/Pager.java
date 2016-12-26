@@ -127,4 +127,9 @@ public class Pager {
         return this.itemsTotal;
     }
     // endregion getters
+
+    public int nextPage() {
+        this.pageNumber++ ;
+        return this.pageNumber;
+    }
 }

@@ -105,4 +105,32 @@ public class Group extends Base {
         cursor.close();
         return result;
     }
+
+    public List<Group> getGroups() {
+        List<Group> result = new ArrayList<Group>();
+        String[] columns = this.columns;
+        String[] columnsData = {"1"};   // enabled
+        Cursor cursor = this.db.getData(this.getTableName(), columns, this.COLUMN_ENABLED + " = ?", columnsData, null, null, this.COLUMN_ID, null);
+        do {
+            Group group = new Group(this.context);
+            int indexId = cursor.getColumnIndex(this.COLUMN_ID);
+            int indexVkId = cursor.getColumnIndex(this.COLUMN_VK_ID);
+            int indexTitle = cursor.getColumnIndex(this.COLUMN_TITLE);
+            int indexEnabled = cursor.getColumnIndex(this.COLUMN_ENABLED);
+
+            Long id = cursor.getLong(indexId);
+            Long vkId = cursor.getLong(indexVkId);
+            Boolean enabled = (cursor.getInt(indexEnabled) == 1);
+            String title = cursor.getString(indexTitle);
+
+            group.setId(id);
+            group.setVkId(vkId);
+            group.setEnabled(enabled);
+            group.setTitle(title);
+            result.add(group);
+
+        } while(cursor.moveToNext());
+        cursor.close();
+        return result;
+    }
 }

@@ -140,7 +140,11 @@ public class Post extends Base {
         List<Post> result = new ArrayList<Post>();
         String[] columns = this.columns;
         String[] columnsData = {"0"};   // viewed
-        Cursor cursor = this.db.getData(this.getTableName(), columns, this.COLUMN_IS_VIEWED + " = ?", columnsData, null, null, this.COLUMN_TIMESTAMP + " ASC", pager);
+        Cursor cursor = this.db.getData(this.getTableName(), columns, this.COLUMN_IS_VIEWED + " = ?", columnsData, null, null, this.COLUMN_TIMESTAMP + " DESC", pager);
+        if(cursor == null || !cursor.moveToFirst()) {
+            cursor.close();
+            return result;
+        }
         do {
             Post post = new Post(this.context);
             int indexId = cursor.getColumnIndex(this.COLUMN_ID);

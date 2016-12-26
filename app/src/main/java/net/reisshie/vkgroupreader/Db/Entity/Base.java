@@ -154,4 +154,10 @@ public class Base {
         }
         return this;
     }
+
+    public Base remove(String entityId) {
+        String[] whereArgs = {entityId};
+        this.db.removeRow(this.getTableName(), this.KEY_COLUMN + "=?", whereArgs);
+        return this;
+    }
 }
