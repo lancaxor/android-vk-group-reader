@@ -111,6 +111,9 @@ public class Group extends Base {
         String[] columns = this.columns;
         String[] columnsData = {"1"};   // enabled
         Cursor cursor = this.db.getData(this.getTableName(), columns, this.COLUMN_ENABLED + " = ?", columnsData, null, null, this.COLUMN_ID, null);
+        if(cursor == null || !cursor.moveToFirst()) {
+            return result;
+        }
         do {
             Group group = new Group(this.context);
             int indexId = cursor.getColumnIndex(this.COLUMN_ID);

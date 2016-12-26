@@ -180,5 +180,8 @@ public class Post extends Base {
     }
     // endregion getters
 
+    public void removeAll() {
+        this.db.removeRow(this.getTableName(), null, null);
+    }
 
 }

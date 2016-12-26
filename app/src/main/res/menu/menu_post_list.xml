@@ -31,4 +31,12 @@
         android:title="Manage Groups"
         app:showAsAction="never"
         />
+
+
+    <item
+        android:id="@+id/mpl_clear_posts"
+        android:orderInCategory="13"
+        android:title="Delete posts from DB"
+        app:showAsAction="never"
+        />
 </menu>

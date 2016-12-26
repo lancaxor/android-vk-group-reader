@@ -31,10 +31,10 @@ public class DbManager extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        if(!this.isDatabaseExists()) {
-            this.getReadableDatabase();
-            this.close();
-        }
+//        if(!this.isDatabaseExists()) {
+//            this.getReadableDatabase();
+//            this.close();
+//        }
     }
 
     /**

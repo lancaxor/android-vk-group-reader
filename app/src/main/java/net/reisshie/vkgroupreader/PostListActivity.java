@@ -156,7 +156,7 @@ public class PostListActivity extends ListActivity {
 
     public void refreshList() {
         this.pager.setStrict(true)
-                .setPageSize(100)
+                .setPageSize(300)
                 .setCurrentPage(0);
         List<Post> posts = (new Post(this)).getNewPosts(this.pager);
         List<String> dataForAppend = new ArrayList<String>();
@@ -226,8 +226,11 @@ public class PostListActivity extends ListActivity {
             case R.id.mpl_menu_refresh_list:    // Refresh list
                 this.refreshList();
                 break;
-            case R.id. mpl_menu_manage_groups:  // Manage Groups
+            case R.id.mpl_menu_manage_groups:  // Manage Groups
                 this.openManageGroupsActivity();
+                break;
+            case R.id.mpl_clear_posts:      // clear Posts DB
+                (new Post(this)).removeAll();
                 break;
             default:
                 Toast.makeText(this, "Unknown Action", Toast.LENGTH_LONG).show();
