@@ -268,7 +268,7 @@ public class PostListActivity extends ListActivity {
         if(this.currentPage < this.maxPages) {
             this.pager.setCurrentPage(this.currentPage);
             this.currentPage++;
-            this.api.getGroupPosts(this.groupIdsToLoad.get(0), this.pager); // load next page
+            this.api.getGroupPosts(this.currentGroupId, this.pager); // load next page
         } else {
             if(this.groupIdsToLoad.size() > 0) {
                 this.currentGroupId = this.groupIdsToLoad.get(0);
