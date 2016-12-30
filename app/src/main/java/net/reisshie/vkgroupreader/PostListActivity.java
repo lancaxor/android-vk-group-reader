@@ -53,6 +53,8 @@ public class PostListActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     /// end recycler
 
+    private boolean currentIsViewed = false;
+
 
     protected void initVariables() {
         this.api = new ApiWorker(this);
@@ -87,12 +89,14 @@ public class PostListActivity extends AppCompatActivity {
     }
 
     public void refreshList() {
-//        this.pager.setStrict(true)
-//                .setPageSize(300)
-//                .setCurrentPage(0);
-//        this.posts = (new Post(this)).getNewPosts(this.pager);
+        this.refreshList(true);
+    }
+    public void refreshList(boolean clear) {
+        if(clear) {
+            this.recyclerAdapter.clear();
+        }
         this.recyclerAdapter.loadData(this.pager);
-        Log.d("ALEX_D", "Post loaded" );
+        this.recyclerView.scrollToPosition(0);
     }
 
 
@@ -142,6 +146,10 @@ public class PostListActivity extends AppCompatActivity {
                 break;
             case R.id.mpl_clear_posts:      // clear Posts DB
                 this.recyclerAdapter.clear();
+                break;
+            case R.id.mpl_toggle_viewed:
+                (new Post(this)).toggleViewedAll(this.currentIsViewed);
+                this.currentIsViewed = !this.currentIsViewed;
                 break;
             default:
                 Toast.makeText(this, "Unknown Action", Toast.LENGTH_LONG).show();

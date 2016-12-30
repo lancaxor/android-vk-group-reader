@@ -39,4 +39,11 @@
         android:title="Delete posts from DB"
         app:showAsAction="never"
         />
+
+    <item
+        android:id="@+id/mpl_toggle_viewed"
+        android:orderInCategory="17"
+        android:title="Toggle Viewed flag"
+        app:showAsAction="never"
+        />
 </menu>

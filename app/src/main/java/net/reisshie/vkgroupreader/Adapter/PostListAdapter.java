@@ -15,6 +15,7 @@ import net.reisshie.vkgroupreader.Db.Entity.Post;
 import net.reisshie.vkgroupreader.R;
 import net.reisshie.vkgroupreader.tools.Pager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +25,6 @@ import java.util.List;
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder> {
 
     private List<Post> posts;
-    private Pager pager;
     private Context context;
     Boolean parity = true;
 
@@ -80,9 +80,25 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Post post = this.posts.get(position);
+        holder.post = post;
         String header = String.valueOf(position + 1) + ". " + post.getDate().toString() + " | " + post.getGroup().getTitle();
         String resultText = header + "\n\n" + post.getText();
         holder.postText.setText(resultText);
+    }
+
+    /**
+     * Called when a view created by this adapter has been detached from its window.
+     * <p>
+     * <p>Becoming detached from the window is not necessarily a permanent condition;
+     * the consumer of an Adapter's views may choose to cache views offscreen while they
+     * are not visible, attaching and detaching them as appropriate.</p>
+     *
+     * @param holder Holder of the view being detached
+     */
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.post.setIsViewed(true).save();
     }
 
     /**
@@ -100,11 +116,12 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView postText;
+        Post post;
 
         public ViewHolder (View itemView, Boolean parity) {
             super(itemView);
             this.postText = (TextView) itemView.findViewById(R.id.post_list_item_text);
-            itemView.setBackgroundColor(parity ? 0xFFFFFFFF : 0xFFFAFAFA);
+            itemView.setBackgroundColor(parity ? 0xFFFAFAFA : 0xFFFFFFFF);
         }
     }
 }

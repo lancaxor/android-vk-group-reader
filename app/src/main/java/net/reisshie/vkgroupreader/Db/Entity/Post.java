@@ -7,7 +7,9 @@ import net.reisshie.vkgroupreader.tools.Pager;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Alexey on 19.12.2016.
@@ -182,6 +184,16 @@ public class Post extends Base {
 
     public void removeAll() {
         this.db.removeRow(this.getTableName(), null, null);
+    }
+
+    public void setViewed() {
+        this.setData(this.COLUMN_IS_VIEWED, "1");
+    }
+
+    public void toggleViewedAll(boolean viewed) {
+        Map<String, String> data = new HashMap<>();
+        data.put("is_viewed", (viewed ? "1" : "0"));
+        this.db.updateRow(this.getTableName(), data, null, null);
     }
 
 }
