@@ -7,7 +7,6 @@ import net.reisshie.vkgroupreader.tools.Pager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Alexey on 21.12.2016.

@@ -1,6 +1,7 @@
 package net.reisshie.vkgroupreader.Api;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,6 +96,7 @@ public class ApiWorker {
     }
 
     public void getGroupPosts(String groupId, Pager pager) {
+
         String fields = "text,id,date";
         String wallId = "-" + groupId;
         VKRequest request = VKApi.wall().get(VKParameters.from(
@@ -106,5 +108,15 @@ public class ApiWorker {
         final ApiWorker self = this;
 
         this.sendRequest(request, this.callback);
+    }
+
+    public void getGroupPostsAsync(String groupId, Pager pager) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                return null;
+            }
+        }.execute();
     }
 }
